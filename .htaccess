@@ -1,4 +1,5 @@
-AuthType Basic
-AuthName "Protected Site"
-AuthUserFile .htpasswd
-require valid-user
+#Remove html extension
+    RewriteEngine on 
+    RewriteCond %{REQUEST_FILENAME} !-d 
+    RewriteCond %{REQUEST_FILENAME}\.html -f 
+    RewriteRule ^(.*)$ $0.html

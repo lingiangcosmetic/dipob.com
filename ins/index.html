@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirect with reCAPTCHA</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #ece9e6, #ffffff);
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Verify to Continue</h1>
+        <form id="recaptcha-form">
+            <div class="g-recaptcha" data-sitekey="6LduTywqAAAAAHmtlMgdhYwqmZQJNL4c2zthywjx"></div>
+            <br/>
+            <button type="button" onclick="submitForm()">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        let links = [];
+
+        // Fetch links from linkss.txt
+        fetch('linkss.txt')
+            .then(response => response.text())
+            .then(data => {
+                links = data.trim().split('\n').map(link => link.trim());
+            })
+            .catch(error => console.error('Error fetching links:', error));
+
+        function submitForm() {
+            const response = grecaptcha.getResponse();
+            if(response.length === 0) {
+                alert("Please complete the reCAPTCHA");
+                return;
+            }
+
+            // Simulate reCAPTCHA validation (since this can't be done securely client-side)
+            const isHuman = Math.random() > 0.1; // Simulate success 90% of the time
+
+            if(isHuman) {
+                if (links.length > 0) {
+                    // Randomly select a link and redirect
+                    const selectedLink = links[Math.floor(Math.random() * links.length)];
+                    window.location.href = selectedLink;
+                } else {
+                    alert("No links available.");
+                }
+            } else {
+                alert("reCAPTCHA validation failed. Please try again.");
+            }
+        }
+    </script>
+</body>
+</html>
